@@ -39,6 +39,10 @@ void NoFUSSClientClass::setBuild(String build) {
     _build = build;
 }
 
+void NoFUSSClientClass::setSerial(String serial) {
+    _serial = serial;
+}
+
 void NoFUSSClientClass::onMessage(TMessageFunction fn) {
     _callback = fn;
 }
@@ -82,7 +86,7 @@ String NoFUSSClientClass::_getPayload() {
     http.setReuse(false);
     http.setTimeout(HTTP_TIMEOUT);
     http.setUserAgent(F(HTTP_USERAGENT));
-    http.addHeader(F("X-ESP8266-MAC"), WiFi.macAddress());
+    http.addHeader(F("X-ESP8266-MAC"), _serial);
     http.addHeader(F("X-ESP8266-DEVICE"), _device);
     http.addHeader(F("X-ESP8266-VERSION"), _version);
     http.addHeader(F("X-ESP8266-BUILD"), _build);
@@ -97,7 +101,7 @@ String NoFUSSClientClass::_getPayload() {
         _errorString = http.errorToString(httpCode);
     }
     http.end();
-
+    
     return payload;
 
 }
@@ -105,6 +109,8 @@ String NoFUSSClientClass::_getPayload() {
 bool NoFUSSClientClass::_checkUpdates() {
 
     String payload = _getPayload();
+    Serial.println(payload);
+    Serial.println(payload.length());
     if (payload.length() == 0) {
         _doCallback(NOFUSS_NO_RESPONSE_ERROR);
         return false;

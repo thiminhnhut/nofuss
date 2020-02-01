@@ -30,8 +30,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // See credentials.h (copy it from credentials.sample.h)
 // for specific configuration
 
-#define DEVICE                  "TEST"
-#define VERSION                 "0.0.9"
+#define DEVICE                  "smartAc"
+#define VERSION                 "0.0.8"
 #define BUILD                   ""
 #define NOFUSS_INTERVAL         10000
 #define WIFI_CONNECT_TIMEOUT    20000
@@ -101,9 +101,9 @@ void nofussLoop() {
 
     if (WiFi.status() != WL_CONNECTED) return;
 
-    static unsigned long last_check = 0;
-    if ((last_check > 0) && ((millis() - last_check) < NOFUSS_INTERVAL)) return;
-    last_check = millis();
+    // static unsigned long last_check = 0;
+    // if ((last_check > 0) && ((millis() - last_check) < NOFUSS_INTERVAL)) return;
+    // last_check = millis();
 
     NoFUSSClient.handle();
 
