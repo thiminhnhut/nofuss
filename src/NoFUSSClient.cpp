@@ -116,10 +116,10 @@ bool NoFUSSClientClass::_checkUpdates() {
         return false;
     }
 
-    StaticJsonBuffer<500> jsonBuffer;
-    JsonObject& response = jsonBuffer.parseObject(payload);
+    DynamicJsonDocument response(500);
+    DeserializationError error = deserializeJson(response, payload);
 
-    if (!response.success()) {
+    if (error) {
         _doCallback(NOFUSS_PARSE_ERROR);
         return false;
     }
@@ -129,13 +129,12 @@ bool NoFUSSClientClass::_checkUpdates() {
         return false;
     }
 
-    _newVersion = response.get<String>("version");
-    _newFileSystem = response.get<String>("spiffs");
-    _newFirmware = response.get<String>("firmware");
+    _newVersion = response["version"].as<String>();
+    _newFileSystem = response["spiffs"].as<String>();
+    _newFirmware = response["firmware"].as<String>();
 
     _doCallback(NOFUSS_UPDATING);
     return true;
-
 }
 
 void NoFUSSClientClass::_doUpdate() {
